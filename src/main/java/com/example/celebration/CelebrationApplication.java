@@ -4,21 +4,37 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Główna klasa aplikacji Celebration.
+ */
+@EnableAspectJAutoProxy
 @SpringBootApplication
 public class CelebrationApplication {
 
+	/**
+	 * Metoda uruchamiająca aplikację Celebration.
+	 *
+	 * @param args argumenty wiersza poleceń
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(CelebrationApplication.class, args);
 	}
 
+
+	/**
+	 * Bean CommandLineRunner, który wykonuje początkowe działania po uruchomieniu aplikacji.
+	 *
+	 * @param repository    repozytorium CelebrationRepository
+	 * @param mongoTemplate instancja MongoTemplate
+	 * @return CommandLineRunner
+	 */
 	@Bean
 	CommandLineRunner runner(CelebrationRepository repository, MongoTemplate mongoTemplate){
 		return args -> {
@@ -39,7 +55,6 @@ public class CelebrationApplication {
 					"Food and board games"
 			);
 
-//			usingMongoTemplate(repository, mongoTemplate, eventName, celebration);
 			repository.findCelebrationByEventName(eventName).ifPresentOrElse(celebration1 -> {
 				System.out.println(eventName +" already exists");
 			}, () -> {
@@ -49,22 +64,4 @@ public class CelebrationApplication {
 		};
 	}
 
-	private static void usingMongoTemplate(CelebrationRepository repository, MongoTemplate mongoTemplate,
-										   String eventName, Celebration celebration) {
-		Query query = new Query();
-		query.addCriteria(Criteria.where("eventName").is(eventName));
-		List<Celebration> celebrations = mongoTemplate.find(query, Celebration.class);
-
-		if (celebrations.size() > 1){
-			throw new IllegalStateException("found many events with this name" + eventName);
-		}
-
-		if (celebrations.isEmpty()){
-			System.out.println("Inserting event" + eventName);
-			repository.insert(celebration);
-		}
-		else{
-			System.out.println(eventName +" already exists");
-		}
-	}
 }

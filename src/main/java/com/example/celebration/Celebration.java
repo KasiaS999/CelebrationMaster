@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Klasa reprezentująca wydarzenie Celebration.
+ */
 @Data
 @Document
 public class Celebration {
@@ -22,16 +25,36 @@ public class Celebration {
     private List<String> guests;
     private String eventPlan;
 
+    /**
+     * Konstruktor domyślny klasy Celebration.
+     * Tworzy nową instancję Celebration z domyślnymi wartościami.
+     */
     public Celebration() {
         new Celebration("eventName", LocalDateTime.now());
     }
 
-
+    /**
+     * Konstruktor klasy Celebration.
+     *
+     * @param eventName      nazwa wydarzenia
+     * @param eventDateTime  data i godzina wydarzenia
+     */
     public Celebration(String eventName, LocalDateTime eventDateTime) {
         this.eventName = eventName;
         this.eventDateTime = eventDateTime;
     }
 
+    /**
+     * Konstruktor klasy Celebration.
+     *
+     * @param eventName       nazwa wydarzenia
+     * @param eventDateTime   data i godzina wydarzenia
+     * @param notes           notatki dotyczące wydarzenia
+     * @param menuItems       lista elementów menu
+     * @param shoppingItems   lista elementów na liście zakupów
+     * @param guests          lista gości
+     * @param eventPlan       plan wydarzenia
+     */
     public Celebration(String eventName,
                        LocalDateTime eventDateTime,
                        String notes, List<MenuItem> menuItems,
